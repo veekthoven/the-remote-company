@@ -1,6 +1,6 @@
 <script setup>
     import { ref } from 'vue'
-    import { Head, Link } from '@inertiajs/inertia-vue3';
+    import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
     import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
     import { CheckCircleIcon, PlusIcon } from '@heroicons/vue/solid'
     import PdfForm from '@/Components/Forms/Pdf.vue';
@@ -22,6 +22,10 @@
     let page = ref(1)
 
     const selectedResource = ref(resources[0])
+
+    function destroy(resource) {
+      useForm().delete(`/resources/${resource.id}`)
+    }
 </script>
 
 
@@ -57,6 +61,17 @@
             </div>
 
             <div class="mt-8 flex flex-col" v-if="page == 1 && allResources.data.length">
+              <div class="rounded-md bg-green-50 p-4 mb-3" v-if="$page.props.flash.message">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <CheckCircleIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-green-800">{{ $page.props.flash.message }}</p>
+                  </div>
+                </div>
+              </div>
+
               <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -93,12 +108,12 @@
                             <span class="mx-3">|</span>
 
 
-                            <Link :href="`/resources/${resource.id}`" class="text-indigo-600 hover:text-indigo-900"
+                            <Link :href="`/resources/edit/${resource.id}`" class="text-indigo-600 hover:text-indigo-900"
                             >Edit</Link>
 
                             <span class="mx-3">|</span>
 
-                            <Link :href="`/resources/${resource.id}`" class="text-red-600 hover:text-indigo-900"
+                            <Link @click.prevent="destroy(resource)" class="text-red-600 hover:text-indigo-900"
                             >Delete</Link>
                           </td>
                         </tr>
@@ -154,9 +169,9 @@
             </div>
 
             <div v-if="page == 3">
-                <pdf-form v-if="selectedResource.type === 'pdf'" />
-                <link-form v-if="selectedResource.type === 'link'" />
-                <code-form v-if="selectedResource.type === 'code'" />
+                <pdf-form @success="page = 1" v-if="selectedResource.type === 'pdf'" />
+                <link-form @success="page = 1" v-if="selectedResource.type === 'link'" />
+                <code-form @success="page = 1" v-if="selectedResource.type === 'code'" />
             </div>
         </div>
     </AdminLayout>
