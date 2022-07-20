@@ -8,7 +8,7 @@
               <span class="ml-2 flex-1 w-0 truncate"> {{ resource.title }} </span>
             </div>
             <div class="ml-4 flex-shrink-0">
-              <Link :href="resource.body.file" class="font-medium text-indigo-600 hover:text-indigo-500"> Download </Link>
+              <a :href="resource.body.file" class="font-medium text-indigo-600 hover:text-indigo-500"> Download </a>
             </div>
           </li>
         </ul>
