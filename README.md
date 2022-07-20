@@ -5,8 +5,10 @@ This app uses [Laravel sail](https://laravel.com/docs/sail) which is a wrapper f
 - run `composer install` to install every dependencies.
 - run `cp .env.example .env` to copy the environment file.
 - run `sail up -d` to get the app up and running.
+- run `sail artisan key:generate` to generate a application key for your app.
 - Update the .env file we just created above with desired values. I've set sensible defaults, for example the app runs on port 81, and the database runs on port 3309.
 - run `sail artisan migrate` to migrate database.
+- - run `sail artisan storage:link` to create a symbolic link. This is only necessary if you're using the default filesystem config.
 - run `sail npm install` to install all dependencies.
 - run `sail npm run dev` to compile js.
 
