@@ -6,13 +6,12 @@ use App\Enums\Type;
 use Inertia\Inertia;
 use App\Models\Resource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class ResourcesController extends Controller
 {
     public function home()
-    {   
+    {
         return Inertia::render('Home', [
             'resources' => Resource::latest()->paginate(10)
         ]);
@@ -42,12 +41,39 @@ class ResourcesController extends Controller
             'body' => $this->prepareBody($request)
         ]);
 
-        return Redirect::route('home');
+        return redirect()->route('admin')->with('message', 'Resource created successfully!!');
+    }
+
+    public function edit(Resource $resource)
+    {
+        return Inertia::render('Edit', [
+            'resource' => $resource
+        ]);
+    }
+
+    public function update(Request $request, Resource $resource)
+    {
+        $data = $request->validate(config("app.rules.{$request->type}"));
+
+        $resource->update([
+             'title' => $data['title'],
+             'type' => $this->getTypeFromRequest($request),
+             'body' => $this->prepareBody($request)
+         ]);
+
+        return redirect()->route('admin')->with('message', 'Resource updated successfully!');
+    }
+
+    public function destroy(Resource $resource)
+    {
+        $resource->delete();
+
+        return redirect()->route('admin')->with('message', 'Resource Deleted successfully!');
     }
 
     protected function getTypeFromRequest($request)
     {
-        if ($request->type === 'pdf') {
+        if ($request->type === 'pdf' || null) {
             return Type::PDF->value;
         }
 
@@ -63,10 +89,10 @@ class ResourcesController extends Controller
     protected function prepareBody($request)
     {
         if ($request->type === 'pdf') {
-            $path = $request->file('file')->store('pdfs');
+            $path = $request->file('file')->store('public/pdfs');
 
             return [
-                'file' => $path
+                'file' => Storage::url($path)
             ];
         }
 
