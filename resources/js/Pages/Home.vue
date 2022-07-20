@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { CheckCircleIcon } from '@heroicons/vue/solid'
 import Pagination from '@/Components/Pagination.vue';
 
   const props = defineProps({
@@ -23,6 +24,17 @@ import Pagination from '@/Components/Pagination.vue';
             </div>
 
             <div class="mt-8 flex flex-col">
+              <div class="rounded-md bg-green-50 p-4 mb-3" v-if="$page.props.flash.message">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <CheckCircleIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-green-800">{{ $page.props.flash.message }}</p>
+                  </div>
+                </div>
+              </div>
+              
               <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
