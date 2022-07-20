@@ -34,6 +34,9 @@
 
 <script setup>
   import { useForm } from '@inertiajs/inertia-vue3'
+  import { defineEmits } from "vue";
+
+  const emit = defineEmits(['success'])
 
   const form = useForm({
     title: null,
@@ -42,7 +45,11 @@
   })
 
   function submit() {
-    form.post('/resources')
+    form.post('/resources', {
+      onSuccess: () => {
+        emit('success')
+      }
+    })
   }
 
 </script>
